@@ -1,4 +1,5 @@
 import express from 'express';
+import userRoutes from './routes/userRoutes';
 
 function greet(name: string): string {
     return `Hey ${name}!`;
@@ -27,5 +28,7 @@ app.get('/api/data',(req,res) => {
 });
 
 app.get('/api/hello/:name',(req,res) => {
-    res.json(`{"message": "Bonjour ${req.params.name}", "timestamp": "${new Date().toISOString()}"}`);
+    res.json({"message": `Bonjour ${req.params.name}`, "timestamp": new Date().toISOString()});
 })
+
+app.use("/api", userRoutes);
