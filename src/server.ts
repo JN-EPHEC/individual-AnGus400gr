@@ -1,5 +1,6 @@
 import express from 'express';
 import userRoutes from './routes/userRoutes';
+import sequelize from './config/database';
 
 function greet(name: string): string {
     return `Hey ${name}!`;
@@ -11,10 +12,6 @@ const port = 3000;
 
 app.get('/', (req , res ) => {
     res.send('Bienvenue sur mon serveur API');
-});
-
-app.listen(port, () => {
-    console.log(`Serveur lancé sur http://localhost:${port}`);
 });
 
 const etudiants = [
@@ -32,3 +29,17 @@ app.get('/api/hello/:name',(req,res) => {
 })
 
 app.use("/api", userRoutes);
+
+try {
+    sequelize.authenticate();
+    console.log('Connexion à la base de donnée SQLite établie.');
+} catch (err) {
+    console.error(err);
+}
+
+sequelize.sync({force: true}).then(()=> {
+    console.log('Base de donnée synchronisée');
+    app.listen(port, () => {
+        console.log(`Serveur lancé sur http://localhost:${port}`);
+    });
+});
