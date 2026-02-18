@@ -1,6 +1,7 @@
 import express from 'express';
 import userRoutes from './routes/userRoutes';
 import sequelize from './config/database';
+import "./models/Users";
 
 function greet(name: string): string {
     return `Hey ${name}!`;
@@ -30,16 +31,14 @@ app.get('/api/hello/:name',(req,res) => {
 
 app.use("/api", userRoutes);
 
-try {
-    sequelize.authenticate();
+sequelize.authenticate().then(()=>{
     console.log('Connexion à la base de donnée SQLite établie.');
-} catch (err) {
-    console.error(err);
-}
-
-sequelize.sync({force: true}).then(()=> {
+    return sequelize.sync();
+}).then(()=> {
     console.log('Base de donnée synchronisée');
     app.listen(port, () => {
         console.log(`Serveur lancé sur http://localhost:${port}`);
     });
+}).catch((err) => {
+    console.error(err);
 });
