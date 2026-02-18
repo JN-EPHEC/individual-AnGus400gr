@@ -11,9 +11,11 @@ console.log(greet("Augustin"))
 const app = express();
 const port = 3000;
 
+/*
 app.get('/', (req , res ) => {
     res.send('Bienvenue sur mon serveur API');
 });
+*/
 
 const etudiants = [
     { id: 1, nom: "Dupont", prenom: "Jean" },
@@ -30,6 +32,8 @@ app.get('/api/hello/:name',(req,res) => {
 })
 
 app.use(express.json());
+
+app.use(express.static('public'));
 
 app.use("/api", userRoutes);
 
