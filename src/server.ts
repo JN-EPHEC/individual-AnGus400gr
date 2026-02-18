@@ -29,6 +29,8 @@ app.get('/api/hello/:name',(req,res) => {
     res.json({"message": `Bonjour ${req.params.name}`, "timestamp": new Date().toISOString()});
 })
 
+app.use(express.json());
+
 app.use("/api", userRoutes);
 
 sequelize.authenticate().then(()=>{
