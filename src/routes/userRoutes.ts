@@ -4,7 +4,14 @@ import User from "../models/Users";
 const router = express.Router();
 
 router.get("/users", async (req, res) => {
-    const users = await User.findAll();
+    const sort = req.query.sort;
+    let order: any = [];
+    if (sort === "asc") {
+        order = [["nom", "ASC"]];
+    } else if (sort === "desc") {
+        order = [["nom", "DESC"]];
+    }
+    const users = await User.findAll({order});
     res.json(users);
 });
 
