@@ -16,13 +16,31 @@ router.get("/users", async (req, res) => {
 });
 
 router.post("/users", async (req, res) => {
-    const {prenom, nom} = req.body;
-    if (!prenom) {
-        return res.json({error: "Le prénom est obligatoire"});
+    try {
+        const { prenom, nom, email } = req.body;
+
+        if (!prenom || !nom || !email) {
+            return res.json({ error: "Prénom, nom et email obligatoires" });
+        }
+
+        const user = await User.create({ prenom, nom, email });
+
+        res.json(user);
+
+    } catch (error: any) {
+
+        if (error.name === "SequelizeUniqueConstraintError") {
+            return res.json({ error: "Email déjà utilisé" });
+        }
+
+        if (error.name === "SequelizeValidationError") {
+            return res.json({ error: "Email invalide" });
+        }
+
+        res.json({ error: "Erreur serveur" });
     }
-    const newUser = await User.create({prenom, nom});
-    res.json(newUser);
 });
+
 
 router.delete("/users/:id",async (req,res) => {
     const {id} = req.params;
