@@ -6,7 +6,7 @@ import {requestLogger} from './middlewares/logger';
 import {errorHandler} from './middlewares/errorHandler';
 import swaggerUi from "swagger-ui-express"
 import { swaggerSpec } from "./config/swagger"
-
+import cors from "cors"
 
 function greet(name: string): string {
     return `Hey ${name}!`;
@@ -23,6 +23,8 @@ const etudiants = [
 ];
 
 app.use(express.json());
+
+app.use(cors())
 
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec))
 
