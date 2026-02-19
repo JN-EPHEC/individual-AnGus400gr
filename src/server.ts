@@ -2,6 +2,7 @@ import express from 'express';
 import userRoutes from './routes/userRoutes';
 import sequelize from './config/database';
 import "./models/Users";
+import {requestLogger} from './middlewares/logger';
 
 function greet(name: string): string {
     return `Hey ${name}!`;
@@ -22,6 +23,8 @@ const etudiants = [
     { id: 2, nom: "Martin", prenom: "Sophie" },
     { id: 3, nom: "Doe", prenom: "John" },
 ];
+
+app.use(requestLogger);
 
 app.get('/api/data',(req,res) => {
     res.json(etudiants);
