@@ -17,23 +17,50 @@ const router = express.Router();
 
 router.get("/", userController.getAllUsers);
 
-router.post("/users", async (req, res) => {
-    const {prenom, nom} = req.body;
-    if (!prenom) {
-        return res.json({error: "Le prénom est obligatoire"});
-    }
-    const newUser = await User.create({prenom, nom});
-    res.json(newUser);
-});
+/**
+ * @swagger
+ * /api/users:
+ *   post:
+ *     summary: Crée un nouvel utilisateur
+ *     tags: [Users]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               prenom:
+ *                 type: string
+ *               nom:
+ *                 type: string
+ *     responses:
+ *       201:
+ *         description: Utilisateur créé
+ *       400:
+ *         description: Prénom manquant
+ */
+router.post("/", userController.createUser)
 
-router.delete("/users/:id",async (req,res) => {
-    const {id} = req.params;
-    const supprime = await User.destroy({where:{id:Number(id)}});
-    if (!supprime){
-        return res.json({error: "Utilisateur introuvable"});
-    } else {
-        return res.json(`Utilisateur ${id} supprimé`);
-    }
-});
+/**
+ * @swagger
+ * /api/users/{id}:
+ *   delete:
+ *     summary: Supprime un utilisateur par ID
+ *     tags: [Users]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: ID de l'utilisateur à supprimer
+ *     responses:
+ *       200:
+ *         description: Utilisateur supprimé
+ *       404:
+ *         description: Utilisateur introuvable
+ */
+router.delete("/:id", userController.deleteUser)
 
 export default router;
