@@ -4,6 +4,9 @@ import sequelize from './config/database';
 import "./models/Users";
 import {requestLogger} from './middlewares/logger';
 import {errorHandler} from './middlewares/errorHandler';
+import swaggerUi from "swagger-ui-express"
+import { swaggerSpec } from "./config/swagger"
+
 
 function greet(name: string): string {
     return `Hey ${name}!`;
@@ -13,17 +16,15 @@ console.log(greet("Augustin"))
 const app = express();
 const port = 3000;
 
-/*
-app.get('/', (req , res ) => {
-    res.send('Bienvenue sur mon serveur API');
-});
-*/
-
 const etudiants = [
     { id: 1, nom: "Dupont", prenom: "Jean" },
     { id: 2, nom: "Martin", prenom: "Sophie" },
     { id: 3, nom: "Doe", prenom: "John" },
 ];
+
+app.use(express.json());
+
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec))
 
 app.use(requestLogger);
 
@@ -34,8 +35,6 @@ app.get('/api/data',(req,res) => {
 app.get('/api/hello/:name',(req,res) => {
     res.json({"message": `Bonjour ${req.params.name}`, "timestamp": new Date().toISOString()});
 })
-
-app.use(express.json());
 
 app.use(express.static('public'));
 
