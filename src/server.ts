@@ -3,6 +3,7 @@ import userRoutes from './routes/userRoutes';
 import sequelize from './config/database';
 import "./models/Users";
 import {requestLogger} from './middlewares/logger';
+import {errorHandler} from './middlewares/errorHandler';
 
 function greet(name: string): string {
     return `Hey ${name}!`;
@@ -39,6 +40,8 @@ app.use(express.json());
 app.use(express.static('public'));
 
 app.use("/api", userRoutes);
+
+app.use(errorHandler)
 
 sequelize.authenticate().then(()=>{
     console.log('Connexion à la base de donnée SQLite établie.');
