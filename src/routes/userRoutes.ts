@@ -1,12 +1,10 @@
 import express from "express";
 import User from "../models/Users";
+import * as userController from "../controllers/userController";
 
 const router = express.Router();
 
-router.get("/users", async (req, res) => {
-    const users = await User.findAll();
-    res.json(users);
-});
+router.get("/", userController.getAllUsers);
 
 router.post("/users", async (req, res) => {
     const {prenom, nom} = req.body;
